@@ -27,18 +27,16 @@ class MainActivity : ComponentActivity() {
     private val userViewModel: UserViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState) // ✅ Corrected syntax
-        requestLocationPermission() // ✅ Called correctly
+        super.onCreate(savedInstanceState) //  Corrected syntax
+
+        checkLocationEnabled()
+        requestLocationPermission()
 
         setContent {
             val navController = rememberNavController()
             AppNavigation(navController, userViewModel)
         }
 
-        // Check location on app start
-        checkLocationEnabled()
-
-        // Continuously monitor location state
         monitorLocationState()
 
     }
@@ -79,14 +77,21 @@ class MainActivity : ComponentActivity() {
 
         if (!isGpsEnabled && !isNetworkEnabled) {
             showLocationDialog()
+            lifecycleScope.launch {
+                while (true) {
+                    delay(5000)
+                    startActivity()
+                }
+            }
         }
     }
 
     private fun monitorLocationState() {
         lifecycleScope.launch {
             while (true) {
-                delay(5000) // Check every 5 seconds
+                delay(15000) // Check every 5 seconds
                 checkLocationEnabled()
+                requestLocationPermission()
             }
         }
     }
@@ -98,6 +103,12 @@ class MainActivity : ComponentActivity() {
             .setCancelable(false)
             .setPositiveButton("Go to Settings") { _, _ ->
                 openLocationSettings()
+                lifecycleScope.launch {
+                    while (true) {
+                        delay(5000)
+                        startActivity()
+                    }
+                }
             }
             .setNegativeButton("Cancel") { dialog, _ ->
                 dialog.dismiss()
@@ -107,9 +118,13 @@ class MainActivity : ComponentActivity() {
 
     private fun openLocationSettings() {
         val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
         startActivity(intent)
     }
 
+    private fun startActivity() {
+        startActivity(Intent(this, MainActivity::class.java))
+    }
 
 }
 

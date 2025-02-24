@@ -262,5 +262,5 @@ fun getRainfall(weather: WeatherResponse): String {
 @Composable
 fun PreviewUserDetailsScreen() {
     val fakeNavController = rememberNavController()
-    UserListScreen(navController = fakeNavController)
+    UserDetailsScreen(navController = fakeNavController, userId = "1")
 }

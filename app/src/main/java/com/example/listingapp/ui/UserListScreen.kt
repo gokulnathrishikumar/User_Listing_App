@@ -1,16 +1,7 @@
 package com.example.listingapp.ui
 
-import android.Manifest
-import android.annotation.SuppressLint
-import android.app.Activity
-import android.content.Context
-import android.content.Intent
-import android.content.pm.PackageManager
 import android.content.res.Configuration
-import android.location.Geocoder
-import android.location.Location
-import android.location.LocationManager
-import android.provider.Settings
+import android.util.Log
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -39,7 +30,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.app.ActivityCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
@@ -47,23 +37,22 @@ import coil.compose.AsyncImage
 import com.example.listingapp.R
 import com.example.listingapp.data.local.UserEntity
 import com.example.listingapp.data.model.WeatherResponse
-import com.example.listingapp.viewmodel.LocationViewModel
 import com.example.listingapp.viewmodel.UserViewModel
-import com.google.android.gms.location.LocationServices
-import java.util.Locale
+
 
 @Composable
 fun UserListScreen(
     navController: NavController,
     viewModel: UserViewModel = hiltViewModel(),
-    locationViewModel: LocationViewModel = hiltViewModel()
 ) {
     val users by viewModel.users.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
     var searchQuery by remember { mutableStateOf("") }
     val weather by viewModel.weather.collectAsState()
-    val cityName by locationViewModel.cityName.collectAsState()
+    val cityName by viewModel.cityName.collectAsState()
     val listState = rememberLazyGridState()
+
+    Log.e("TAG", "UserListScreen: cityName : "+cityName )
 
     LaunchedEffect(listState) {
         snapshotFlow { listState.layoutInfo.visibleItemsInfo }
@@ -95,14 +84,14 @@ fun UserListScreen(
             }
             if (isLoading) {
                 item {
-                    Box(modifier = Modifier.fillMaxWidth().padding(16.dp), contentAlignment = Alignment.Center) {
+                    Box(modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp), contentAlignment = Alignment.Center) {
                         CircularProgressIndicator()
                     }
                 }
             }
         }
-
-
     }
 }
 
@@ -129,7 +118,9 @@ fun Header(weather: WeatherResponse?, cityName: String?) {
                 fontSize = 22.sp)
         }
         weather?.let {
-            Row(modifier = Modifier.align(Alignment.BottomEnd).padding(1.dp), verticalAlignment = Alignment.CenterVertically) {
+            Row(modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(1.dp), verticalAlignment = Alignment.CenterVertically) {
                 Column {
                     Text(
                         text = "${it.main.temp}°C",
@@ -169,7 +160,10 @@ fun SearchBar(searchText: String, onSearchTextChanged: (String) -> Unit) {
             }
         } },
         label = { Text("Search User") },
-        modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp, vertical = 4.dp).clip(MaterialTheme.shapes.medium),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 24.dp, vertical = 4.dp)
+            .clip(MaterialTheme.shapes.medium),
         shape = RoundedCornerShape(28.dp),
         colors = TextFieldDefaults.outlinedTextFieldColors(focusedBorderColor = colorResource(id = R.color.primary_first), unfocusedBorderColor = Color.Gray),
         singleLine = true,
@@ -180,57 +174,25 @@ fun SearchBar(searchText: String, onSearchTextChanged: (String) -> Unit) {
 @Composable
 fun UserGridItem(user: UserEntity, onClick: () -> Unit) {
     Column(
-        modifier = Modifier.padding(8.dp).clip(MaterialTheme.shapes.medium).background(Color.White).clickable(onClick = onClick),
+        modifier = Modifier
+            .padding(8.dp)
+            .clip(MaterialTheme.shapes.medium)
+            .background(Color.White)
+            .clickable(onClick = onClick),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         AsyncImage(
             model = user.profileImage,
             contentDescription = "Profile Picture",
-            modifier = Modifier.size(90.dp).clip(MaterialTheme.shapes.medium),
+            modifier = Modifier
+                .size(90.dp)
+                .clip(MaterialTheme.shapes.medium),
             contentScale = ContentScale.Crop
         )
         Spacer(modifier = Modifier.height(4.dp))
         Text(user.name, style = MaterialTheme.typography.bodyMedium, textAlign = TextAlign.Center, modifier = Modifier.padding(horizontal = 4.dp))
     }
 }
-
-fun getCityName(context: Context, latitude: Double, longitude: Double): String? {
-    return try {
-        val geocoder = Geocoder(context, Locale.getDefault())
-        geocoder.getFromLocation(latitude, longitude, 1)?.firstOrNull()?.locality
-    } catch (e: Exception) {
-        e.printStackTrace()
-        null
-    }
-}
-
-@SuppressLint("MissingPermission")
-fun getUserLocation(context: Context, onLocationReceived: (Location?) -> Unit) {
-    val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
-
-    // Ensure GPS is enabled
-    if (!context.getSystemService(LocationManager::class.java).isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-        context.startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
-        onLocationReceived(null)
-        return
-    }
-
-    // Get activity from context (to avoid ClassCastException)
-    val activity = context as? Activity ?: return
-
-    // Check location permission
-    if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-        ActivityCompat.requestPermissions(activity, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1001)
-        onLocationReceived(null)
-        return
-    }
-
-    // Fetch last known location
-    fusedLocationClient.lastLocation
-        .addOnSuccessListener { location -> onLocationReceived(location) }
-        .addOnFailureListener { onLocationReceived(null) }
-}
-
 
 @Preview(showBackground = true, name = "User List Preview")
 @Composable
