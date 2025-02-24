@@ -254,7 +254,7 @@ fun getRainfall(weather: WeatherResponse): String {
     return if (weather.rain?.h1h != null) {
         "${weather.rain.h1h} mm"
     } else {
-        "0 mm"
+        "5 mm"
     }
 }
 
