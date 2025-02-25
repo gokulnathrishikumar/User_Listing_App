@@ -83,11 +83,13 @@ class UserViewModel @Inject constructor(application: Application) : AndroidViewM
     @SuppressLint("MissingPermission")
     fun getCurrentLocationWeather() {
         fusedLocationProviderClient.lastLocation
-            .addOnSuccessListener { location: Location? ->
+            .addOnSuccessListener { location: Location? ->5
+                Log.e("TAG", "getCurrentLocationWeather: location : "+location )
                 if (location != null) {
                     fetchWeather(location.latitude, location.longitude)
                     fetchUserLocation()
                 } else {
+                    fetchUserLocation()
                     Log.e("WeatherAPI", "Last known location is null")
                 }
             }
@@ -127,15 +129,6 @@ class UserViewModel @Inject constructor(application: Application) : AndroidViewM
     @SuppressLint("MissingPermission")
     fun getUserLocation(context: Context, onLocationReceived: (Location?) -> Unit) {
         val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
-
-        val locationManager = context.getSystemService(LocationManager::class.java)
-        if (!(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
-                    locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER))) {
-            // GPS or Network Provider is disabled
-            context.startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
-            onLocationReceived(null)
-            return
-        }
 
         Log.e("TAG", "fetchUserLocation: city 1: ")
 

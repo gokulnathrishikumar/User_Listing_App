@@ -117,30 +117,35 @@ fun Header(weather: WeatherResponse?, cityName: String?) {
                 color = Color.White,
                 fontSize = 22.sp)
         }
-        weather?.let {
-            Row(modifier = Modifier
+        Log.e("TAG", "Header: weather : "+weather )
+
+        Row(modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(1.dp), verticalAlignment = Alignment.CenterVertically) {
                 Column {
-                    Text(
-                        text = "${it.main.temp}°C",
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = Color.White
-                    )
-                    cityName?.let {
+                    if (weather != null) {
                         Text(
-                            it,
+                            text = "${weather.main.temp}°C",
                             style = MaterialTheme.typography.bodyLarge,
-                            color = Color.White.copy(alpha = 0.9f),
-                            fontSize = 22.sp
+                            color = Color.White
+                        )
+                    } else {
+                        Text(
+                            text = "--°C", // Default temperature if weather is null
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = Color.White
                         )
                     }
+                    Text(
+                        text = cityName ?: "Unknown City", // Fallback text for cityName
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = Color.White.copy(alpha = 0.9f),
+                        fontSize = 22.sp
+                    )
                 }
                 Spacer(modifier = Modifier.width(2.dp))
                 Image(painter = painterResource(id = R.drawable.cludy), contentDescription = "Weather Icon", modifier = Modifier.size(50.dp))
             }
-
-        }
     }
 }
 

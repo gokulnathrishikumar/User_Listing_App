@@ -77,12 +77,6 @@ class MainActivity : ComponentActivity() {
 
         if (!isGpsEnabled && !isNetworkEnabled) {
             showLocationDialog()
-            lifecycleScope.launch {
-                while (true) {
-                    delay(5000)
-                    startActivity()
-                }
-            }
         }
     }
 
@@ -103,12 +97,6 @@ class MainActivity : ComponentActivity() {
             .setCancelable(false)
             .setPositiveButton("Go to Settings") { _, _ ->
                 openLocationSettings()
-                lifecycleScope.launch {
-                    while (true) {
-                        delay(5000)
-                        startActivity()
-                    }
-                }
             }
             .setNegativeButton("Cancel") { dialog, _ ->
                 dialog.dismiss()
@@ -122,9 +110,6 @@ class MainActivity : ComponentActivity() {
         startActivity(intent)
     }
 
-    private fun startActivity() {
-        startActivity(Intent(this, MainActivity::class.java))
-    }
 
 }
 
