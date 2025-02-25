@@ -12,5 +12,6 @@ interface WeatherService {
         @Query("lon") longitude: Double,
         @Query("appid") apiKey: String,
         @Query("units") units: String = "metric"
+        
     ): WeatherResponse
 }
