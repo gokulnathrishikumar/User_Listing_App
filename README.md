@@ -1,7 +1,5 @@
 # 📱 User Listing App  
 
-![App Icon](app/src/main/res/mipmap-xxxhdpi/ic_launcher.png)  
-
 ## 📖 Overview  
 The **User Listing App** is an Android application built using **Kotlin** and **Jetpack Compose**. It provides the following features:  
 
@@ -11,8 +9,6 @@ The **User Listing App** is an Android application built using **Kotlin** and **
 ✅ Implements pagination for efficient data retrieval.  
 ✅ Utilizes caching mechanisms to minimize redundant API requests.  
 ✅ Enhances UI with animations for a seamless user experience.  
-
----
 
 ## 🏗️ Project Structure  
 
@@ -40,8 +36,6 @@ Manages main logic, navigation, and utility functions.
 - `Constants.kt` – Stores constant values such as API URLs and keys.  
 - `AppNavigator.kt` – Handles navigation between screens.  
 - `LocationPermissionHelper.kt` – Manages runtime location permission requests.  
-
----
 
 ## 🚀 Features & Implementation  
 
@@ -72,8 +66,6 @@ Manages main logic, navigation, and utility functions.
 ✔ Displays visually appealing **loading and error screens**.  
 ✔ Optimizes navigation between screens for better user experience.  
 
----
-
 ## ⚡ Setup & Installation  
 
 ### 🔧 Prerequisites  
@@ -86,7 +78,6 @@ Ensure you have the following installed:
 
 ### 📲 How to Run  
 1. **Clone the repository** or extract the ZIP file:  
-   ```sh
    git clone https://github.com/your-username/UserListingApp.git
 
 🛠️ Technologies Used
@@ -100,23 +91,7 @@ JUnit & Espresso (Testing) 🧪
 📜 License
 This project is licensed under the MIT License – feel free to use and modify!
 
-🤝 Contributing
-Pull requests are welcome! If you find any issues, feel free to open an Issue.
-
 📧 Contact
 For any queries or support, reach out to:
 📩 gokulnathrishikumar@gmail.com.com
 🔗 LinkedIn Profile - https://www.linkedin.com/in/gokulnath-velmurugan-505801228/
-
-🚀 Happy Coding! 🚀
-
-markdown
-Copy
-Edit
-
-### 🔹 Key Enhancements in This README:
-- **Formatted Sections** with clear headings.  
-- **Icons & Emojis** for better readability.  
-- **Code Blocks** for commands and file references.  
-- **Screenshots Section** for UI previews.  
-- **License & Contribution Guidelines** for a professional touch.  
